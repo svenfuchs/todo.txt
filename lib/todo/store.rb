@@ -15,7 +15,6 @@ module Todo
     end
 
     def push(dones)
-      p dones
       dones.each { |done| post(done) }
     end
 
@@ -26,7 +25,6 @@ module Todo
       end
 
       def post(text)
-        p text
         request = Net::HTTP::Post.new(url, headers)
         request.form_data = { raw_text: text, team: opts[:team] }
         response = http.request(request)
