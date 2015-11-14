@@ -1,0 +1,12 @@
+#!/bin/bash -
+
+# log=/var/log/system.log
+log=/tmp/todo-watch.log
+
+exec > >(tee $log) 2>&1
+
+file=$1
+dir=$(dirname $file)
+git="/usr/local/bin/git --git-dir $dir/.git --work-tree $dir"
+
+/usr/local/bin/fswatch -o $file | xargs -n1 -I{} bash -c "$git commit -am 'edit' && $git push -f"

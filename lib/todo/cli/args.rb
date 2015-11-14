@@ -4,7 +4,7 @@ module Todo
   class Cli
     class Args
       OPTIONS = {
-        file: './todo.txt'
+        # file: './todo.txt'
       }
 
       attr_reader :cmd, :args, :opts
@@ -23,8 +23,12 @@ module Todo
               opts[:file] = file
             end
 
-            o.on('-s', '--since DATE', 'Since (today|yesterday)') do |file|
-              opts[:file] = file
+            o.on('-s', '--since DATE', 'Since date') do |date|
+              opts[:since] = date
+            end
+
+            o.on('-b', '--before DATE', 'Before date') do |date|
+              opts[:before] = date
             end
           end
         end

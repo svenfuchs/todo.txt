@@ -1,15 +1,10 @@
 module Todo
-  class Item < Struct.new(:list, :line)
+  class Item < Struct.new(:line)
     STATUS  = /^(#{STATUSES.values.join('|')}){1}\s*/
     DONE    = /^#{STATUSES[:done]}{1}/
     DATE    = /\s*done:(\d{4}-\d{2}-\d{2})/
-    ID      = /\s*\[(\d+)\]/
     TAG     = /\s*([^\s]+):([^\s]+)/
     PROJECT = /\s*\+([\w\-]+)/
-
-    def id
-      @id ||= tags[:id]
-    end
 
     def done?
       status == :done
@@ -20,7 +15,7 @@ module Todo
     end
 
     def text
-      @text = line.sub(STATUS, '').gsub(ID, '').gsub(TAG, '').strip
+      @text = line.sub(STATUS, '').gsub(TAG, '').strip
     end
 
     def tags
@@ -47,7 +42,7 @@ module Todo
     alias pending pend
 
     def to_s
-      [STATUSES[status], text, *to_pairs({ id: id || list.next_id }.merge(tags))].compact.join(' ')
+      [STATUSES[status], text, *to_pairs(tags)].compact.join(' ')
     end
 
     def <=>(other)

@@ -1,13 +1,13 @@
-require 'chronic'
-require 'faraday'
 require 'json'
+require 'net/http'
+require 'uri'
 
 module Todo
   class Store < Struct.new(:opts)
     URL = 'https://idonethis.com/api/v0.1/dones/'
 
-    def ids
-      @ids ||= fetch.map { |item| Item.new(nil, item['raw_text']).id }.compact
+    def items
+      @items ||= fetch.map { |item| Item.new(item['raw_text']) }
     end
 
     def fetch
@@ -15,26 +15,38 @@ module Todo
     end
 
     def push(dones)
+      p dones
       dones.each { |done| post(done) }
     end
 
     private
 
-    def get
-      http.get(URL, owner: opts[:username], team: opts[:team], done_date_after: opts[:since], page_size: 100)
-    end
-
-    def post(text)
-      response = http.post(URL, raw_text: text, team: opts[:team])
-      raise "Could not post to #{URL}: #{response.body}" unless response.status == 201
-    end
-
-    def http
-      Faraday.new do |c|
-        c.use Faraday::Request::UrlEncoded
-        c.use Faraday::Adapter::NetHttp
-        c.headers['Authorization'] = "Token #{opts[:token]}"
+      def get
+        http.get(url(owner: opts[:username], team: opts[:team], done_date_after: opts[:since], page_size: 100), headers)
       end
-    end
+
+      def post(text)
+        p text
+        request = Net::HTTP::Post.new(url, headers)
+        request.form_data = { raw_text: text, team: opts[:team] }
+        response = http.request(request)
+        raise "Could not post to #{URL}: #{response.body}" unless response.code.to_i == 201
+      end
+
+      def headers
+        { 'Authorization' => "Token #{opts[:token]}" }
+      end
+
+      def http
+        Net::HTTP.new(url.host, url.port).tap do |http|
+          http.use_ssl = true
+        end
+      end
+
+      def url(params = nil)
+        URI(URL).tap do |url|
+          url.query = URI.encode_www_form(params) if params
+        end
+      end
   end
 end

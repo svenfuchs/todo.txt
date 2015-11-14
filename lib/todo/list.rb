@@ -7,11 +7,6 @@ module Todo
       multiple_items: 'Multiple items found for: %s'
     }
 
-    def initialize(*)
-      super
-      @max_id = 0
-    end
-
     [:pend, :done, :toggle].each do |name|
       define_method(name) do |string|
         find(string).send(name)
@@ -20,12 +15,8 @@ module Todo
       end
     end
 
-    def next_id
-      @max_id += 1
-    end
-
     def items
-      @items ||= lines.map { |line| Item.new(self, line) if line =~ LINE }.compact.reverse
+      @items ||= lines.map { |line| Item.new(line) if line =~ LINE }.compact.reverse
     end
 
     def to_s

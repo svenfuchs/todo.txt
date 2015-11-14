@@ -17,7 +17,6 @@ module Todo
         end
 
         def output
-          # string = View.new(list.items).to_s
           file? ? file.write(list.to_s) : puts(list.to_s)
         end
 
@@ -51,11 +50,57 @@ module Todo
         end
       end
 
+      DATES = {
+        two_weeks_ago: (Time.now - 60 * 60 * 24 * 14).strftime('%Y-%m-%d'),
+        yesterday:     (Time.now - 60 * 60 * 24).strftime('%Y-%m-%d'),
+        today:         Time.now.strftime('%Y-%m-%d')
+      }
+
+      class Archive < Base
+        def run
+          write(lines)
+          list.lines.delete_if { |line| lines.include?(line) }
+          output
+        end
+
+        def write(lines)
+          ::File.open(archive_filename, 'a+') do |f|
+            f << lines.reject { |line| archived.include?(line) }.join("\n")
+          end
+        end
+
+        def lines
+          @lines ||= items.map { |item| item.line }
+        end
+
+        def items
+          items = list.items.select(&:done?)
+          items = items.select { |item| item.tags[:done].to_s < before }
+          items.reverse
+        end
+
+        def archived
+          @archived ||= ::File.exists?(archive_filename) ? ::File.read(archive_filename).split("\n") : []
+        end
+
+        def archive_filename
+          ::File.expand_path('../archive.txt', opts[:file].to_s)
+        end
+
+        def before
+          DATES[opts[:before]] || opts[:before] || DATES[:two_weeks_ago]
+        end
+      end
+
       class Push < Base
         def run
+          store.push(items.map(&:text))
+        end
+
+        def items
           items = list.items.select(&:done?)
-          items = items.reject { |item| store.ids.include?(item.id) }
-          store.push(items.map { |item| [item.text, "id:#{item.id}"].join(' ') })
+          items = items.select { |item| item.tags[:done].to_s >= since }
+          items.reject { |item| store.items.map(&:text).include?(item.text) }
         end
 
         def store
@@ -63,7 +108,7 @@ module Todo
         end
 
         def since
-          @since ||= Chronic.parse(opts[:since] || '2015-11-12').to_date
+          DATES[opts[:since]] || opts[:since] || DATES[:yesterday]
         end
       end
     end
