@@ -12,7 +12,7 @@ module Todo
       def initialize(args)
         @opts = OPTIONS
         @args = parser.parse!(args)
-        @cmd = @args.shift || raise('No command given')
+        @cmd  = @args.shift || raise('No command given')
       end
 
       private

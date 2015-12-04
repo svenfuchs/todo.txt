@@ -1,8 +1,10 @@
 module Todo
-  class Item < Struct.new(:line)
+  class Item < Struct.new(:list, :line)
+    PARTS   = [:status, :text, :tags, :id]
     STATUS  = /^(#{STATUSES.values.join('|')}){1}\s*/
     DONE    = /^#{STATUSES[:done]}{1}/
     DATE    = /\s*done:(\d{4}-\d{2}-\d{2})/
+    ID      = /\s*\[(\d+)\]/
     TAG     = /\s*([^\s]+):([^\s]+)/
     PROJECT = /\s*\+([\w\-]+)/
 
@@ -14,8 +16,12 @@ module Todo
       @status ||= STATUSES.invert[line.match(STATUS) && $1] || raise("Unknown status")
     end
 
+    def id
+      @id ||= line =~ ID && $1.to_i
+    end
+
     def text
-      @text = line.sub(STATUS, '').gsub(TAG, '').strip
+      @text = line.sub(STATUS, '').gsub(ID, '').gsub(TAG, '').strip
     end
 
     def tags
@@ -41,8 +47,22 @@ module Todo
     end
     alias pending pend
 
-    def to_s
-      [STATUSES[status], text, *to_pairs(tags)].compact.join(' ')
+
+    def to_s(*parts)
+      format(*parts.empty? ? PARTS : parts)
+    end
+
+    def format(*parts)
+      result = parts.inject([]) do |result, part|
+        result << case part
+        when :status then STATUSES[status]
+        when :text   then text
+        when :tags   then to_pairs(tags)
+        when :id     then "[#{id || list.next_id}]"
+        end
+        result
+      end
+      result.flatten.compact.join(' ')
     end
 
     def <=>(other)

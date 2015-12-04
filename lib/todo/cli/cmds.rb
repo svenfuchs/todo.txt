@@ -5,7 +5,7 @@ module Todo
     module Cmds
       class Base < Struct.new(:args, :opts)
         def text
-          args.join(' ')
+          args.join(' ') if args.any?
         end
 
         def list
@@ -13,7 +13,7 @@ module Todo
         end
 
         def input
-          file? ? file.lines : args
+          @input ||= file? ? file.lines : STDIN.readlines
         end
 
         def output
@@ -21,7 +21,7 @@ module Todo
         end
 
         def file?
-          opts[:file]
+          !!opts[:file]
         end
 
         def file
@@ -38,6 +38,8 @@ module Todo
 
       class Done < Base
         def run
+          raise 'No item given' unless text
+          p self
           list.done(text)
           output
         end
@@ -94,13 +96,13 @@ module Todo
 
       class Push < Base
         def run
-          store.push(items.map(&:text))
+          store.push(items.map { |item| item.to_s(:text, :tags, :id) })
         end
 
         def items
           items = list.items.select(&:done?)
           items = items.select { |item| item.tags[:done].to_s >= since }
-          items.reject { |item| store.items.map(&:text).include?(item.text) }
+          items.reject { |item| store.known?(item) }
         end
 
         def store

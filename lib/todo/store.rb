@@ -6,8 +6,8 @@ module Todo
   class Store < Struct.new(:opts)
     URL = 'https://idonethis.com/api/v0.1/dones/'
 
-    def items
-      @items ||= fetch.map { |item| Item.new(item['raw_text']) }
+    def known?(item)
+      texts.include?(item.text) or ids.include?(item.id)
     end
 
     def fetch
@@ -19,6 +19,18 @@ module Todo
     end
 
     private
+
+      def texts
+        items.map(&:text)
+      end
+
+      def ids
+        items.map(&:id).compact
+      end
+
+      def items
+        @items ||= fetch.map { |item| Item.new(nil, item['raw_text']) }
+      end
 
       def get
         http.get(url(owner: opts[:username], team: opts[:team], done_date_after: opts[:since], page_size: 100), headers)
