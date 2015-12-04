@@ -9,7 +9,7 @@ module Todo
         end
 
         def list
-          @list ||= List.new(input)
+          @list ||= Todo::List.new(input)
         end
 
         def input
@@ -29,6 +29,16 @@ module Todo
         end
       end
 
+      class List < Base
+        def run
+          items = list.items
+          items = items.select { |item| opts[:status].to_sym == item.status } if opts[:status]
+          items = items.select { |item| opts[:since] <= item.done_date.to_s } if opts[:since]
+          items = items.sort_by(&:done_date)
+          puts items.map { |item| [item.done_date, item.text].join(' ') }
+        end
+      end
+
       class Pend < Base
         def run
           list.pend(text)
@@ -39,7 +49,6 @@ module Todo
       class Done < Base
         def run
           raise 'No item given' unless text
-          p self
           list.done(text)
           output
         end
@@ -51,12 +60,6 @@ module Todo
           output
         end
       end
-
-      DATES = {
-        two_weeks_ago: (Time.now - 60 * 60 * 24 * 14).strftime('%Y-%m-%d'),
-        yesterday:     (Time.now - 60 * 60 * 24).strftime('%Y-%m-%d'),
-        today:         Time.now.strftime('%Y-%m-%d')
-      }
 
       class Archive < Base
         def run
@@ -90,7 +93,7 @@ module Todo
         end
 
         def before
-          DATES[opts[:before]] || opts[:before] || DATES[:two_weeks_ago]
+          opts[:before] || DATES[:two_weeks_ago]
         end
       end
 
@@ -110,7 +113,7 @@ module Todo
         end
 
         def since
-          DATES[opts[:since]] || opts[:since] || DATES[:yesterday]
+          opts[:since] || DATES[:yesterday]
         end
       end
     end

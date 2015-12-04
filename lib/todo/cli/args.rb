@@ -24,13 +24,21 @@ module Todo
             end
 
             o.on('-s', '--since DATE', 'Since date') do |date|
-              opts[:since] = date
+              opts[:since] = normalize_date(date)
             end
 
             o.on('-b', '--before DATE', 'Before date') do |date|
-              opts[:before] = date
+              opts[:before] = normalize_date(date)
+            end
+
+            o.on('--status STATUS', 'Status') do |status|
+              opts[:status] = status
             end
           end
+        end
+
+        def normalize_date(date)
+          DATES[date.to_sym] ? DATES[date.to_sym] : date
         end
     end
   end

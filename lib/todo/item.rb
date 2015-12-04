@@ -24,6 +24,10 @@ module Todo
       @text = line.sub(STATUS, '').gsub(ID, '').gsub(TAG, '').strip
     end
 
+    def done_date
+      tags[:done].to_s
+    end
+
     def tags
       @tags ||= Hash[line.scan(TAG).map { |key, value| [key.to_sym, value] }]
     end
