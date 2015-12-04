@@ -11,7 +11,7 @@ module Todo
 
     def initialize(*)
       super
-      @max_id = items.map(&:id).max || 0
+      @max_id = items.map(&:id).map(&:to_i).max || 0
     end
 
     [:pend, :done, :toggle].each do |name|
