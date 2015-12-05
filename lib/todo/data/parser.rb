@@ -1,0 +1,38 @@
+require 'todo'
+
+module Todo
+  module Data
+    class Parser < Struct.new(:line)
+      STATUS = /^(#{STATUSES.values.join('|')}){1}\s*/
+      ID     = /\s*\[(\d+)\]/
+      TAG    = /\s*([^\s]+):([^\s]+)/
+
+      def parse
+        {
+          id: id,
+          text: text,
+          status: status,
+          tags: tags,
+        }
+      end
+
+      private
+
+        def status
+          STATUSES.invert[line.match(STATUS) && $1]
+        end
+
+        def id
+          line =~ ID && $1.to_i
+        end
+
+        def text
+          line.sub(STATUS, '').gsub(ID, '').gsub(TAG, '').rstrip
+        end
+
+        def tags
+          Hash[line.scan(TAG).map { |key, value| [key.to_sym, value] }]
+        end
+    end
+  end
+end

@@ -2,6 +2,6 @@
 
 $: << File.expand_path('../../lib', __FILE__)
 
-require 'todo'
+require 'todo/cli'
 
-Todo::Cli.run(ARGV)
+Todo::Cli.new(ARGV.dup).run
