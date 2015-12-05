@@ -1,5 +1,5 @@
 require 'todo/cli/args'
-require 'todo/cli/cmds'
+require 'todo/cmds'
 require 'todo/helpers/string'
 
 module Todo

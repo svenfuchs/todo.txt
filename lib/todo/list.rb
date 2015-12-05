@@ -26,6 +26,10 @@ module Todo
       @items ||= lines.map { |line| Item.new(self, line) if line =~ LINE }.compact.reverse
     end
 
+    def ids
+      items.map(&:id).compact
+    end
+
     def next_id
       @max_id += 1
     end
