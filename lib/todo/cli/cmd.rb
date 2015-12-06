@@ -40,7 +40,7 @@ module Todo
       end
 
       def normalize_date(date)
-        Support::Date.new.apply(date)
+        Support::Date.new.format(date)
       end
 
       # TODO how to test if stdin is attached?

@@ -17,7 +17,7 @@ module Todo
       attr_reader :date
 
       def initialize(date = ::Date.today)
-        @date = date.to_date
+        @date = date.is_a?(String) ? Time.parse(date).to_date : date.to_date
       end
 
       def format(str, opts = {})
@@ -28,7 +28,7 @@ module Todo
 
         def apply(str)
           if str =~ DATE
-            str
+            Time.parse(str).to_date
           elsif respond_to?(str, true)
             send(str)
           elsif str =~ AGO
