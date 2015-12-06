@@ -2,8 +2,8 @@ require 'todo/format'
 
 describe Todo::Format do
   let(:lines) { ['- foo [1]', 'x bar done:2015-12-01 [2]'] }
-  let(:items) { Todo::Data::List.parse(lines).items }
-  subject     { described_class.new(items, format: format) }
+  let(:list)  { Todo::Data::List.parse(lines) }
+  subject     { described_class.new(list, format: format) }
 
   describe 'default columns' do
     let(:format) {}
@@ -18,5 +18,11 @@ describe Todo::Format do
   describe 'format name' do
     let(:format) { :short }
     it { expect(subject.apply).to eq(['- foo', 'x 2015-12-01 bar']) }
+  end
+
+  describe 'adds missing ids' do
+    let(:format) { :full }
+    let(:lines) { ['- foo', 'x bar done:2015-12-01'] }
+    it { expect(subject.apply).to eq(['- foo [1]', 'x bar done:2015-12-01 [2]']) }
   end
 end

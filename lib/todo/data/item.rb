@@ -14,6 +14,10 @@ module Todo
         define_method(name) { data[name] }
       end
 
+      def item?
+        !!status
+      end
+
       def done?
         status == :done
       end

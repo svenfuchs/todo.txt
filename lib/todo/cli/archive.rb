@@ -14,9 +14,9 @@ module Todo
       end
 
       def run
-        items = list.select(status: :done, before: before).items
-        archive.write(format(items))
-        io.write(format(list.items - items))
+        selected = list.select(status: :done, before: before)
+        archive.write(format(selected))
+        io.write(format(list.reject { |item| selected.items.include?(item) }))
       end
 
       private

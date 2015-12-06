@@ -34,7 +34,7 @@ module Todo
       end
 
       def run
-        out.write(format(list.items, format: opts[:format] || :short))
+        out.write(format(list, format: opts[:format] || :short))
       end
 
       private

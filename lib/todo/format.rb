@@ -3,7 +3,7 @@ require 'todo/helpers/hash/format'
 require 'todo/helpers/object/presence'
 
 module Todo
-  class Format < Struct.new(:items, :opts)
+  class Format < Struct.new(:list, :opts)
     FORMATS = {
       full:  [:status, :text, :tags, :id],
       short: [:status, :done_date, :text]
@@ -12,17 +12,19 @@ module Todo
     include Helpers::Hash::Format, Helpers::Object::Presence
 
     def apply
-      items.map { |item| format(item) }
+      list.items.map { |item| format(item) }
     end
 
     private
 
       def format(item)
-        cols.map { |col| format_col(col, item.send(col)) }.compact.join(' ')
+        cols.map { |col| format_col(col, item) }.compact.join(' ')
       end
 
-      def format_col(col, value)
-        send(:"format_#{col}", value) if present?(value)
+      def format_col(col, item)
+        value = item.send(col)
+        value = list.next_id if item.item? && col == :id && value.nil?
+        send(:"format_#{col}", value) if value
       end
 
       def format_status(status)

@@ -16,7 +16,7 @@ module Todo
       def run
         list = Data::List.parse(io.read)
         list.toggle(data)
-        io.write(format(list.items))
+        io.write(format(list))
       end
 
       private
