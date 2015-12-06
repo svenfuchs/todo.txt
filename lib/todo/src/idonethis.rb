@@ -45,7 +45,7 @@ module Todo
         end
 
         def params
-          { owner: config[:username], team: config[:team], done_date_after: opts[:since], page_size: 100 }
+          { owner: config[:username], team: config[:team], done_date_after: opts[:after], page_size: 100 }
         end
     end
   end

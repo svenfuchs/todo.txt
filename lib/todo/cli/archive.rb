@@ -1,4 +1,6 @@
 require 'todo/cli/cmd'
+require 'todo/data/list'
+require 'todo/src/file'
 
 module Todo
   class Cli
@@ -8,7 +10,7 @@ module Todo
       end
 
       opt '-b', '--before DATE', 'Before date' do |opts, date|
-        opts[:before] = normalize_date(date)
+        opts[:before] = date
       end
 
       def run
@@ -32,7 +34,7 @@ module Todo
         end
 
         def before
-          opts[:before] || DATES[:two_weeks_ago]
+          opts[:before] || Support::Date.new.format(:two_weeks_ago)
         end
     end
   end

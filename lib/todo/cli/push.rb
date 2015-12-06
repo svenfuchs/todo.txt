@@ -6,8 +6,12 @@ require 'todo/src/idonethis'
 module Todo
   class Cli
     class Push < Cmd
+      opt '-a', '--after DATE', 'After date' do |opts, date|
+        opts[:after] = date
+      end
+
       opt '-s', '--since DATE', 'Since date' do |opts, date|
-        opts[:since] = normalize_date(date)
+        opts[:after] = date
       end
 
       CONFIG = {
@@ -35,7 +39,7 @@ module Todo
         end
 
         def since
-          opts[:since] || DATES[:yesterday]
+          opts[:since] || Support::Dates.new.format(:yesterday)
         end
     end
   end

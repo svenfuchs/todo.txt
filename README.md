@@ -40,7 +40,6 @@ $ todo toggle foo                  # should assume ./TODO.txt but i can't figure
 
 # Filtering items
 
-$ todo list --since yesterday                      # by done date
 $ todo list --since 2015-12-01 --before 2015-11-01 # by done date
 $ todo list --status pending                       # by status
 $ todo list --status done                          # by status
@@ -50,8 +49,13 @@ $ todo list --text foo                             # by text
 $ todo list foo                                    # by text
 $ todo list foo --since 2015-12-01 --status done   # by text, done date, and status
 
-Named dates are: one_month_ago, two_weeks_ago, one_week_ago: two_days_ago,
-yesterday, today.
+# Named dates
+
+$ todo list --since yesterday
+$ todo list --since one.week.ago
+$ todo list --since 'two weeks ago'
+$ todo list --since 1_year_ago
+$ todo list --since 'last friday'
 
 # Formats
 

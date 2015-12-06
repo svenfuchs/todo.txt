@@ -9,15 +9,15 @@ module Todo
       end
 
       opt '-a', '--after DATE', 'After date' do |opts, date|
-        opts[:after] = normalize_date(date)
+        opts[:after] = date
       end
 
       opt '-s', '--since DATE', 'Since date' do |opts, date|
-        opts[:after] = normalize_date(date)
+        opts[:after] = date
       end
 
       opt '-b', '--before DATE', 'Before date' do |opts, date|
-        opts[:before] = normalize_date(date)
+        opts[:before] = date
       end
 
       opt '--status STATUS', 'Status' do |opts, status|
