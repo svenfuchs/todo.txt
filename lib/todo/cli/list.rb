@@ -4,20 +4,37 @@ require 'todo/data/list'
 module Todo
   class Cli
     class List < Cmd
-      opt '-s', '--since DATE', 'Since date' do |date|
-        opts[:since] = normalize_date(date)
+      opt '-f', '--format FORMAT', 'Format' do |opts, format|
+        opts[:format] = format
       end
 
-      opt '-b', '--before DATE', 'Before date' do |date|
+      opt '-a', '--after DATE', 'After date' do |opts, date|
+        opts[:after] = normalize_date(date)
+      end
+
+      opt '-s', '--since DATE', 'Since date' do |opts, date|
+        opts[:after] = normalize_date(date)
+      end
+
+      opt '-b', '--before DATE', 'Before date' do |opts, date|
         opts[:before] = normalize_date(date)
       end
 
-      opt '--status STATUS', 'Status' do |status|
+      opt '--status STATUS', 'Status' do |opts, status|
         opts[:status] = status
       end
 
+      opt '-p', '--project PROJECT', 'Project' do |opts, project|
+        opts[:projects] ||= []
+        opts[:projects] << project
+      end
+
+      opt '-t', '--text TEXT', 'Text' do |opts, text|
+        opts[:text] = text
+      end
+
       def run
-        out.write(render(list.items, [:done_date, :text]))
+        out.write(render(list.items, format: opts[:format] || :short))
       end
 
       private
@@ -29,8 +46,8 @@ module Todo
         end
 
         def data
-          data = slice(opts, :status, :before, :since)
-          # data = data.merge(text: args.first)
+          data = slice(opts, :status, :before, :after, :projects, :text)
+          data = data.merge(text: args.first) if args.first
           data
         end
 

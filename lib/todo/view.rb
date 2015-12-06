@@ -3,8 +3,11 @@ require 'todo/helpers/hash/format'
 require 'todo/helpers/object/presence'
 
 module Todo
-  class View < Struct.new(:items, :cols)
-    COLS = [:status, :text, :tags, :id]
+  class View < Struct.new(:items, :opts)
+    FORMATS = {
+      full:  [:status, :text, :tags, :id],
+      short: [:status, :done_date, :text]
+    }
 
     include Helpers::Hash::Format, Helpers::Object::Presence
 
@@ -43,7 +46,12 @@ module Todo
       end
 
       def cols
-        super || COLS
+        format = opts[:format] || :full
+        FORMATS[format.to_sym] || parse_format(opts[:format])
+      end
+
+      def parse_format(format)
+        Array(format).join(':').split(/[:,]/).map(&:to_sym)
       end
   end
 end

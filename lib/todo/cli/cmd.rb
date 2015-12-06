@@ -18,8 +18,8 @@ module Todo
         opts[:file] ? Src::File.new(opts[:file]) : Src::Io.new(slice(opts, :in, :out))
       end
 
-      def render(list, cols = nil)
-        View.new(list, cols).render
+      def render(list, opts = {})
+        View.new(list, opts).render
       end
     end
   end

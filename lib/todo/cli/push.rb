@@ -6,7 +6,7 @@ require 'todo/src/idonethis'
 module Todo
   class Cli
     class Push < Cmd
-      opt '-s', '--since DATE', 'Since date' do |date|
+      opt '-s', '--since DATE', 'Since date' do |opts, date|
         opts[:since] = normalize_date(date)
       end
 
@@ -17,7 +17,7 @@ module Todo
       }
 
       def run
-        lines = render(list.items, [:text, :tags, :id])
+        lines = render(list.items, format: [:text, :tags, :id])
         src.write(lines)
         io.write(lines)
       end

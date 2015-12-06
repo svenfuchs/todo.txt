@@ -1,6 +1,19 @@
+require 'todo/helpers/hash/slice'
+
 module Todo
   module Data
-    class Matcher < Struct.new(:item, :data)
+    class Matcher
+      ATTRS = [:id, :text, :projects, :status, :after, :before]
+
+      include Helpers::Hash::Slice
+
+      attr_reader :item, :data
+
+      def initialize(item, data)
+        @item = item
+        @data = slice(data, *ATTRS)
+      end
+
       def matches?
         return true if data.empty?
         data[:id] ? match_id : match_data
@@ -22,12 +35,16 @@ module Todo
           item.text.include?(data[:text])
         end
 
+        def match_projects
+          item.projects & data[:projects] == data[:projects]
+        end
+
         def match_status
           item.status && item.status.to_sym == normalize_status(data[:status].to_sym)
         end
 
-        def match_since
-          item.done_date.to_s >= data[:since].to_s
+        def match_after
+          item.done_date.to_s >= data[:after].to_s
         end
 
         def match_before
