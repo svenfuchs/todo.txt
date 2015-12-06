@@ -10,17 +10,39 @@ module Todo
       extend Support::OptionsParser
       include Helpers::Hash::Slice
 
+      def self.normalize_date(date)
+        DATES[date.to_sym] ? DATES[date.to_sym] : date
+      end
+
       opt '-f', '--file FILENAME', 'Filename' do |opts, file|
         opts[:file] = file
       end
 
       def io
-        opts[:file] ? Src::File.new(opts[:file]) : Src::Io.new(slice(opts, :in, :out))
+        if opts[:file]
+          Src::File.new(opts[:file])
+        else
+          Src::Io.new(slice(opts, :in, :out))
+        end
       end
 
       def render(list, opts = {})
         View.new(list, opts).render
       end
+
+      # TODO how to test if stdin is attached?
+      #
+      # def stdin?
+      #   !$stdin.eof? # blocks
+      # end
+      #
+      # def stdin?
+      #   $stdin.read_nonblock(1)
+      #   $stdin.seek(-1) # can't seek on stdin?
+      #   true
+      # rescue IO::EAGAINWaitReadable
+      #   false
+      # end
     end
   end
 end

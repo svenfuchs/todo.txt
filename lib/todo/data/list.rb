@@ -56,8 +56,8 @@ module Todo
       private
 
         def validate(data, list)
-          raise Error.new(MSGS[:item_not_found] % to_pairs(data)) if list.size == 0
-          raise Error.new(MSGS[:multiple_items] % to_pairs(data)) if list.size > 1
+          raise Error.new(MSGS[:item_not_found] % to_pairs(data).join(' ')) if list.size == 0
+          raise Error.new(MSGS[:multiple_items] % to_pairs(data).join(' ')) if list.size > 1
         end
     end
   end

@@ -32,7 +32,7 @@ module Todo
         end
 
         def match_text
-          item.text.include?(data[:text])
+          item.text.include?(data[:text]) unless data[:text].empty?
         end
 
         def match_projects

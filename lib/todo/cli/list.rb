@@ -4,7 +4,7 @@ require 'todo/data/list'
 module Todo
   class Cli
     class List < Cmd
-      opt '-f', '--format FORMAT', 'Format' do |opts, format|
+      opt '--format FORMAT', 'Format' do |opts, format|
         opts[:format] = format
       end
 

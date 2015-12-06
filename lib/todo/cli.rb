@@ -26,10 +26,6 @@ module Todo
 
     private
 
-      def normalize_date(date)
-        DATES[date.to_sym] ? DATES[date.to_sym] : date
-      end
-
       def const
         @const ||= Cli.const_get(camelize(cmd))
       rescue NameError
