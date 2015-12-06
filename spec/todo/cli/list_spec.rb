@@ -1,6 +1,6 @@
-require 'todo/cmd/list'
+require 'todo/cli/list'
 
-describe Todo::Cmd::List do
+describe Todo::Cli::List do
   let(:lines) { ['- foo [1]', 'x bar done:2015-12-01 [2]'] }
   let(:io)    { Support::Io.new(lines.join("\n")) }
   let(:out)   { Support::Io.new }

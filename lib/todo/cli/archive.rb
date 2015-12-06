@@ -1,8 +1,16 @@
-require 'todo/cmd/base'
+require 'todo/cli/cmd'
 
 module Todo
-  module Cmd
-    class Archive < Base
+  class Cli
+    class Archive < Cmd
+      opt '-a', '--archive FILENAME', 'Archive filename' do |opts, file|
+        opts[:archive] = file
+      end
+
+      opt '-b', '--before DATE', 'Before date' do |opts, date|
+        opts[:before] = normalize_date(date)
+      end
+
       def run
         items = list.select(status: :done, before: before).items
         archive.write(render(items))
@@ -20,7 +28,7 @@ module Todo
         end
 
         def archive_path
-          File.expand_path('../archive.txt', opts[:file])
+          opts[:archive] || File.expand_path('../archive.txt', opts[:file])
         end
 
         def before

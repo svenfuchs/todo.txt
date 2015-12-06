@@ -1,6 +1,6 @@
-require 'todo/cmd/toggle'
+require 'todo/cli/toggle'
 
-describe Todo::Cmd::Toggle do
+describe Todo::Cli::Toggle do
   let(:io)    { Support::Io.new(lines.join("\n")) }
   let(:out)   { Support::Io.new }
   let(:opts)  { { in: io, out: out } }

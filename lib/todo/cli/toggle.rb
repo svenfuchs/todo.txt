@@ -1,10 +1,10 @@
-require 'todo/cmd/base'
+require 'todo/cli/cmd'
 require 'todo/data/list'
 require 'todo/data/parser'
 
 module Todo
-  module Cmd
-    class Toggle < Base
+  class Cli
+    class Toggle < Cmd
       def run
         list = Data::List.parse(io.read)
         list.toggle(data)
@@ -15,8 +15,7 @@ module Todo
 
         def data
           data = Data::Parser.new(args.first).parse
-          data = slice(data, :id, :text)
-          data
+          slice(data, :id, :text)
         end
     end
   end

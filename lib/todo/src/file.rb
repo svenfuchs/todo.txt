@@ -13,7 +13,7 @@ module Todo
       end
 
       def read
-        @lines ||= exists? ? ::File.readlines(path).map(&:rstrip) : []
+        exists? ? ::File.readlines(path).map(&:rstrip) : []
       end
 
       def write(lines)

@@ -1,11 +1,21 @@
 require 'todo'
-require 'todo/cmd/base'
+require 'todo/cli/cmd'
 require 'todo/data/list'
 require 'todo/src/idonethis'
 
 module Todo
-  module Cmd
-    class Push < Base
+  class Cli
+    class Push < Cmd
+      opt '-s', '--since DATE', 'Since date' do |date|
+        opts[:since] = normalize_date(date)
+      end
+
+      CONFIG = {
+        team:     ENV['IDONETHIS_TEAM'],
+        username: ENV['IDONETHIS_USERNAME'],
+        token:    ENV['IDONETHIS_TOKEN']
+      }
+
       def run
         lines = render(list.items, [:text, :tags, :id])
         src.write(lines)
@@ -21,7 +31,7 @@ module Todo
         end
 
         def src
-          Src::Idonethis.new(since: since)
+          Src::Idonethis.new(config, since: since)
         end
 
         def since

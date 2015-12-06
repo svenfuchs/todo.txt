@@ -2,6 +2,7 @@ module Todo
   module Data
     class Matcher < Struct.new(:item, :data)
       def matches?
+        return true if data.empty?
         data[:id] ? match_id : match_data
       end
 

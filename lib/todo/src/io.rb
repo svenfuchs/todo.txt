@@ -18,11 +18,11 @@ module Todo
       private
 
         def input
-          opts[:in] || STDIN
+          opts[:in] || $stdin
         end
 
         def output
-          opts[:out] || STDOUT
+          opts[:out] || $stdout
         end
     end
   end

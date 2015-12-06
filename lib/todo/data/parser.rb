@@ -1,4 +1,5 @@
 require 'todo'
+require 'todo/helpers/hash/compact'
 
 module Todo
   module Data
@@ -7,13 +8,15 @@ module Todo
       ID     = /\s*\[(\d+)\]/
       TAG    = /\s*([^\s]+):([^\s]+)/
 
+      include Helpers::Hash::Compact
+
       def parse
-        {
+        compact(
           id: id,
           text: text,
           status: status,
           tags: tags,
-        }
+        )
       end
 
       private
