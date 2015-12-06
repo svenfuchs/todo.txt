@@ -92,7 +92,7 @@ module Todo
 
         def last_workday
           num = ::Date.today.wday - 1
-          WDAYS[num == 0 || num == 6 ? 5 : num]
+          WDAYS[num == -1 ? 5 : num]
         end
     end
   end
