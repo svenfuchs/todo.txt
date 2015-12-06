@@ -21,7 +21,7 @@ module Todo
       end
 
       def format(str, opts = {})
-        apply(str).strftime(opts[:format] || FORMAT)
+        apply(str.downcase).strftime(opts[:format] || FORMAT)
       end
 
       private

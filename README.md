@@ -40,7 +40,8 @@ $ todo toggle foo                  # should assume ./TODO.txt but i can't figure
 
 # Filtering items
 
-$ todo list --since 2015-12-01 --before 2015-11-01 # by done date
+$ todo list --since 2015-12-01                     # by done date
+$ todo list --after 2015-11-01 --before 2015-12-01 # by done date
 $ todo list --status pending                       # by status
 $ todo list --status done                          # by status
 $ todo list --project foo                          # by project
