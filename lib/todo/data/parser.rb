@@ -11,12 +11,12 @@ module Todo
       include Helpers::Hash::Compact
 
       def parse
-        compact(
+        {
           id: id,
           text: text,
           status: status,
           tags: tags,
-        )
+        }
       end
 
       private
