@@ -11,7 +11,7 @@ module Todo
 
       SEP    = '(?: |_|\-|\.)'
       AGO    = /^(\d+|#{NUMS.join('|')})#{SEP}(days?|weeks?|months?|years?)#{SEP}ago$/
-      LAST   = /^last#{SEP}(#{MONTHS.join('|')}|#{WDAYS.join('|')})/
+      LAST   = /^last#{SEP}(#{MONTHS.join('|')}|#{WDAYS.join('|')}|workday)/
       DATE   = /\d{4}-\d{2}-\d{2}/
 
       attr_reader :date
@@ -54,6 +54,7 @@ module Todo
         end
 
         def last(str)
+          str = last_workday if str == 'workday'
           key = str.to_s.downcase[0, 3].to_sym
           last_wday(key) || last_month(key) || fail(MSGS[:unknown] % str)
         end
@@ -87,6 +88,11 @@ module Todo
 
         def singularize(str)
           str.sub(/s$/, '')
+        end
+
+        def last_workday
+          num = ::Date.today.wday - 1
+          WDAYS[num == 0 || num == 6 ? 5 : num]
         end
     end
   end

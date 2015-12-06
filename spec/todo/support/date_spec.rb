@@ -21,4 +21,6 @@ describe Todo::Support::Date do
   it { expect(date.format('last_friday')).to    eq '2015-11-27' }
   it { expect(date.format('last_sep')).to       eq '2015-09-01' }
   it { expect(date.format('last_december')).to  eq '2014-12-01' }
+
+  it { expect(date.format('last workday')).to   eq '2015-11-30' }
 end
