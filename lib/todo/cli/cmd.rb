@@ -2,7 +2,7 @@ require 'todo/helpers/hash/slice'
 require 'todo/src/file'
 require 'todo/src/io'
 require 'todo/support/options_parser'
-require 'todo/view'
+require 'todo/format'
 
 module Todo
   class Cli
@@ -26,8 +26,8 @@ module Todo
         end
       end
 
-      def render(list, opts = {})
-        View.new(list, opts).render
+      def format(list, opts = {})
+        Format.new(list, opts).apply
       end
 
       # TODO how to test if stdin is attached?

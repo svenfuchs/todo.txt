@@ -1,6 +1,6 @@
-# TODO.txt
+# TODO.txt [![Build Status](https://secure.travis-ci.org/svenfuchs/todo.txt.png?branch=master)](https://travis-ci.org/svenfuchs/todo.txt)
 
-- My personal flavor of the format. [Todo.txt](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format)
+My personal flavor of the format. [Todo.txt](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format)
 
 ## Assumptions
 
@@ -12,9 +12,9 @@ todo.txt file personally. Your mileage will most probably vary.
   etc) is a good thing. A tool must play nice with this and must not rewrite
   any custom formatting.
 * An item can belong to one or many projects.
-* The concept of "contexts" (phone, work, home) seems like a stale from the GTD
-  era. Does anybody actually use this? Also, the format `@name` indicates a
-  person in most contexts nowadays.
+* The concept of "contexts" (phone, work, home) seems like a stale relict from
+  the GTD era to me. Does anybody actually use this? Also, the format `@name`
+  indicates a person in most contexts nowadays.
 * Assigning explicit priorities don't really work well. Re-ordering items on
   the todo.txt list works better.
 * A concept of generic key/value pairs seems like a useful addition to make the
@@ -57,6 +57,7 @@ yesterday, today.
 
 $ todo list --format short
 $ todo list --format full
+$ todo list --format id,text,tags
 
 # Toggling
 

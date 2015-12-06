@@ -3,7 +3,7 @@ require 'todo/helpers/hash/format'
 require 'todo/helpers/object/presence'
 
 module Todo
-  class View < Struct.new(:items, :opts)
+  class Format < Struct.new(:items, :opts)
     FORMATS = {
       full:  [:status, :text, :tags, :id],
       short: [:status, :done_date, :text]
@@ -11,7 +11,7 @@ module Todo
 
     include Helpers::Hash::Format, Helpers::Object::Presence
 
-    def render
+    def apply
       items.map { |item| format(item) }
     end
 

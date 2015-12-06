@@ -17,7 +17,7 @@ module Todo
       }
 
       def run
-        lines = render(list.items, format: [:text, :tags, :id])
+        lines = format(list.items, format: [:text, :tags, :id])
         src.write(lines)
         io.write(lines)
       end

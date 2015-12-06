@@ -13,8 +13,8 @@ module Todo
 
       def run
         items = list.select(status: :done, before: before).items
-        archive.write(render(items))
-        io.write(render(list.items - items))
+        archive.write(format(items))
+        io.write(format(list.items - items))
       end
 
       private
